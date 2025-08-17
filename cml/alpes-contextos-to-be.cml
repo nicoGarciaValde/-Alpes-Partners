@@ -1,0 +1,280 @@
+/* Alpes Partners – TO-BE (Event-Driven + Microservicios) */
+
+ContextMap AlpesPartnersToBe {
+  contains GestionAfiliados
+  contains GestionInfluencers
+  contains ProgramasLealtad
+  contains GestionCampanas
+  contains DescubrimientoPartners
+  contains MotorTracking
+  contains MotorComisiones
+  contains ProcesamientoPagos
+  contains Analytics
+  contains GestionClientes
+  contains BusEventos
+  contains PasarelaAPI
+  contains Notificaciones
+  contains Cumplimiento
+  contains GestionContenido
+
+  /* Backbone de eventos (el Bus expone OHS + PL) */
+  GestionAfiliados        [D] <- [U,OHS,PL] BusEventos
+  GestionInfluencers      [D] <- [U,OHS,PL] BusEventos
+  ProgramasLealtad        [D] <- [U,OHS,PL] BusEventos
+  GestionCampanas         [D] <- [U,OHS,PL] BusEventos
+  MotorComisiones         [D] <- [U,OHS,PL] BusEventos
+  ProcesamientoPagos      [D] <- [U,OHS,PL] BusEventos
+  Analytics               [D] <- [U,OHS,PL] BusEventos
+  Notificaciones          [D] <- [U,OHS,PL] BusEventos
+
+  /* Flujo tracking → comisiones → pagos → cumplimiento */
+  MotorComisiones         [D] <- [U]        MotorTracking
+  ProcesamientoPagos      [D] <- [U]        MotorComisiones
+  Cumplimiento            [D] <- [U]        ProcesamientoPagos
+  Cumplimiento            [D] <- [U]        MotorComisiones
+
+  /* Gateway (entrada) */
+  GestionAfiliados        [D] <- [U,OHS]    PasarelaAPI
+  GestionInfluencers      [D] <- [U,OHS]    PasarelaAPI
+  GestionCampanas         [D] <- [U,OHS]    PasarelaAPI
+  GestionClientes         [D] <- [U,OHS]    PasarelaAPI
+  Analytics               [D] <- [U,OHS]    PasarelaAPI
+
+  /* Descubrimiento alimenta onboarding de personas/partners */
+  GestionAfiliados        [D] <- [U]        DescubrimientoPartners
+  GestionInfluencers      [D] <- [U]        DescubrimientoPartners
+
+  /* Campañas coordinan con afiliados, influencers y contenido */
+  GestionAfiliados        [D] <- [U]        GestionCampanas
+  GestionInfluencers      [D] <- [U]        GestionCampanas
+  GestionContenido        [D] <- [U]        GestionCampanas
+
+  /* CRM apoya a gestión de afiliados/influencers */
+  GestionAfiliados        [D] <- [U]        GestionClientes
+  GestionInfluencers      [D] <- [U]        GestionClientes
+}
+
+BoundedContext GestionAfiliados {
+  Aggregate Afiliado {
+    Entity EntidadAfiliado
+    Entity ProgramaAfiliado
+    ValueObject PerfilAfiliado
+    ValueObject EstructuraComision
+    ValueObject MetricasRendimiento
+    DomainEvent AfiliadoRegistrado
+    DomainEvent AfiliadoActivado
+    DomainEvent UmbralRendimientoAlcanzado
+  }
+  Aggregate ReclutamientoAfiliados {
+    Entity CampanaReclutamiento
+    Entity AfiliadoProspecto
+    ValueObject CriteriosReclutamiento
+    DomainEvent CampanaReclutamientoLanzada
+    DomainEvent ProspectoAfiliadoIdentificado
+  }
+}
+
+BoundedContext GestionInfluencers {
+  Aggregate Influencer {
+    Entity EntidadInfluencer
+    Entity CampanaInfluencer
+    ValueObject PerfilesRedesSociales
+    ValueObject DemografiaAudiencia
+    ValueObject RequisitosCreativos
+    DomainEvent InfluencerVerificado
+    DomainEvent PropuestaCampanaEnviada
+    DomainEvent ContenidoPublicado
+    DomainEvent HitoEngagementAlcanzado
+  }
+}
+
+BoundedContext ProgramasLealtad {
+  Aggregate Embajador {
+    Entity EntidadEmbajador
+    Entity Referido
+    ValueObject TipoEmbajador
+    ValueObject EnlaceReferido
+    ValueObject BalanceRecompensas
+    DomainEvent EmbajadorActivado
+    DomainEvent ReferidoGenerado
+    DomainEvent ReferidoConvertido
+    DomainEvent RecompensaGanada
+  }
+}
+
+BoundedContext GestionCampanas {
+  Aggregate Campana {
+    Entity EntidadCampana
+    Entity CanalCampana
+    ValueObject ObjetivosCampana
+    ValueObject PresupuestoCampana
+    ValueObject HorarioCampana
+    DomainEvent CampanaCreada
+    DomainEvent CampanaActivada
+    DomainEvent CampanaOptimizada
+    DomainEvent CampanaCompletada
+  }
+  Aggregate WorkflowCampana {
+    Entity EntidadWorkflow
+    Entity PasoWorkflow
+    ValueObject ReglaWorkflow
+    DomainEvent WorkflowDisparado
+    DomainEvent PasoWorkflowCompletado
+  }
+}
+
+BoundedContext DescubrimientoPartners {
+  Aggregate MatchPartner {
+    Entity SolicitudMatching
+    Entity RecomendacionPartner
+    ValueObject CriteriosMatching
+    ValueObject PuntajeCompatibilidad
+    DomainEvent SolicitudMatchingEnviada
+    DomainEvent RecomendacionesGeneradas
+    DomainEvent MatchPartnerAceptado
+  }
+}
+
+BoundedContext MotorTracking {
+  Aggregate EventoTracking {
+    Entity EntidadEventoTracking
+    ValueObject TipoEvento
+    ValueObject PayloadEvento
+    ValueObject DatosAtribucion
+    DomainEvent ClickRastreado
+    DomainEvent ConversionRastreada
+    DomainEvent VentaRastreada
+  }
+  Aggregate SesionTracking {
+    Entity EntidadSesion
+    Entity PuntoContacto
+    ValueObject ModeloAtribucion
+    DomainEvent SesionIniciada
+    DomainEvent PuntoContactoRegistrado
+    DomainEvent AtribucionCalculada
+  }
+}
+
+BoundedContext MotorComisiones {
+  Aggregate Comision {
+    Entity CalculoComision
+    ValueObject ModeloComision
+    ValueObject TasaComision
+    ValueObject MontoComision
+    ValueObject EstadoComision
+    DomainEvent ComisionCalculada
+    DomainEvent ComisionAjustada
+    DomainEvent ComisionAprobada
+  }
+  Aggregate EstructuraComision {
+    Entity EstructuraNivel
+    Entity ReglaComision
+    ValueObject NivelComision
+    DomainEvent EstructuraComisionActualizada
+    DomainEvent UmbralNivelAlcanzado
+  }
+}
+
+BoundedContext ProcesamientoPagos {
+  Aggregate Pago {
+    Entity InstruccionPago
+    ValueObject MetodoPago
+    ValueObject MontoPago
+    ValueObject HorarioPago
+    DomainEvent InstruccionPagoCreada
+    DomainEvent PagoProcesado
+    DomainEvent PagoFallido
+    DomainEvent PagoReconciliado
+  }
+  Aggregate LotePagos {
+    Entity PagoLote
+    Entity ItemPago
+    ValueObject EstadoLote
+    DomainEvent LoteCreado
+    DomainEvent LoteProcesado
+  }
+}
+
+BoundedContext Analytics {
+  Aggregate MetricasRendimiento {
+    Entity CalculoMetrica
+    Entity ReporteKPI
+    ValueObject DefinicionMetrica
+    ValueObject IndicadorRendimiento
+    DomainEvent MetricasCalculadas
+    DomainEvent UmbralKPISuperado
+    DomainEvent InsightGenerado
+  }
+}
+
+BoundedContext GestionClientes {
+  Aggregate Cliente {
+    Entity EntidadCliente
+    ValueObject TipoCliente
+    ValueObject PerfilCliente
+    ValueObject CicloVidaCliente
+    DomainEvent ClienteRegistrado
+    DomainEvent ClienteActivado
+    DomainEvent ClienteActualizado
+  }
+}
+
+BoundedContext BusEventos {
+  Aggregate StreamEventos {
+    Entity EntidadEvento
+    Entity SuscripcionEvento
+    ValueObject EsquemaEvento
+    ValueObject MetadataEvento
+    DomainEvent EventoPublicado
+    DomainEvent EventoConsumido
+    DomainEvent ProcesamientoEventoFallido
+  }
+}
+
+BoundedContext PasarelaAPI {
+  Aggregate EndpointAPI {
+    Entity EntidadEndpoint
+    Entity ClaveAPI
+    ValueObject LimiteRate
+    ValueObject PoliticaAutenticacion
+    DomainEvent ClaveAPIGenerada
+    DomainEvent LimiteRateExcedido
+    DomainEvent LlamadaAPIRegistrada
+  }
+}
+
+BoundedContext Notificaciones {
+  Aggregate Notificacion {
+    Entity PlantillaNotificacion
+    Entity EntregaNotificacion
+    ValueObject CanalNotificacion
+    ValueObject PreferenciasEntrega
+    DomainEvent NotificacionDisparada
+    DomainEvent NotificacionEntregada
+    DomainEvent NotificacionFallida
+  }
+}
+
+BoundedContext Cumplimiento {
+  Aggregate VerificacionCumplimiento {
+    Entity ReglaCumplimiento
+    Entity ViolacionCumplimiento
+    ValueObject PuntajeRiesgo
+    ValueObject EstadoCumplimiento
+    DomainEvent VerificacionCumplimientoDisparada
+    DomainEvent ViolacionDetectada
+    DomainEvent CumplimientoAprobado
+  }
+}
+
+BoundedContext GestionContenido {
+  Aggregate ActivoContenido {
+    Entity EntidadActivo
+    Entity VersionContenido
+    ValueObject MetadataContenido
+    ValueObject EstadoAprobacion
+    DomainEvent ContenidoCreado
+    DomainEvent ContenidoAprobado
+    DomainEvent ActivoContenidoPublicado
+  }
+}

@@ -1,0 +1,283 @@
+/* 
+ * Alpes Partners - Documentación de Dominios y Subdominios (Español)
+ * Maestría en Ingeniería de Software - Universidad de los Andes
+ * Curso: Domain Driven Design
+ * Proyecto: Migración de monolito a arquitectura basada en eventos
+ */
+
+/* ========== CONTEXTO MAP PARA DOMINIOS ========== */
+ContextMap MapaDominiosAlpesPartners {
+    type = SYSTEM_LANDSCAPE
+    state = TO_BE
+    
+    contains ContextoGestionPartnerships
+    contains ContextoGestionClientes
+    contains ContextoGestionCampanas
+    contains ContextoAnaliticsInteligencia
+    contains ContextoOperacionesFinancieras
+    contains ContextoInfraestructuraTecnologica
+    contains ContextoOperacionesMarketplace
+    contains ContextoComunicacionCRM
+    
+    /* Relaciones principales entre dominios */
+    ContextoGestionPartnerships -> ContextoGestionCampanas
+    ContextoGestionCampanas -> ContextoAnaliticsInteligencia
+    ContextoGestionPartnerships -> ContextoOperacionesFinancieras
+    ContextoOperacionesMarketplace -> ContextoGestionPartnerships
+    ContextoGestionClientes -> ContextoGestionPartnerships
+    ContextoInfraestructuraTecnologica -> ContextoAnaliticsInteligencia
+    ContextoComunicacionCRM -> ContextoGestionClientes
+}
+
+/* ========== BOUNDED CONTEXTS QUE IMPLEMENTAN DOMINIOS ========== */
+
+BoundedContext ContextoGestionPartnerships implements MarketingAfiliados, MarketingInfluencers, ProgramasLealtad, PlataformaPartnerships {
+    type = APPLICATION
+    domainVisionStatement = "Transformar la forma en que las marcas crean, gestionan y escalan asociaciones estratégicas mediante una plataforma integral de gestión de partnerships."
+}
+
+BoundedContext ContextoGestionClientes implements GestionMarcas, GestionPartners, GestionAgencias {
+    type = APPLICATION
+    domainVisionStatement = "Gestionar de manera integral las relaciones con todos los tipos de clientes del ecosistema Alpes Partners."
+}
+
+BoundedContext ContextoGestionCampanas implements OrquestacionCampanas, GestionContenido, GestionContratos {
+    type = APPLICATION
+    domainVisionStatement = "Orquestar el ciclo de vida completo de campañas de marketing de partnerships."
+}
+
+BoundedContext ContextoAnaliticsInteligencia implements AnalisisRendimiento, Reportes, InteligenciaNegocio {
+    type = APPLICATION
+    domainVisionStatement = "Proporcionar inteligencia de negocio avanzada y análisis predictivo para optimizar el rendimiento de partnerships."
+}
+
+BoundedContext ContextoOperacionesFinancieras implements MotorComisiones, ProcesamientoPagos, CumplimientoFinanciero, Tesoreria {
+    type = APPLICATION
+    domainVisionStatement = "Gestionar todas las operaciones financieras del ecosistema de partnerships."
+}
+
+BoundedContext ContextoInfraestructuraTecnologica implements ProcesamientoEventos, MotorTracking, PasarelaAPI, Infraestructura, Seguridad {
+    type = APPLICATION
+    domainVisionStatement = "Proporcionar la infraestructura tecnológica robusta, escalable y segura necesaria para soportar 80,000+ transacciones por minuto."
+}
+
+BoundedContext ContextoOperacionesMarketplace implements DescubrimientoPartners, CatalogoMarketplace, Onboarding {
+    type = APPLICATION
+    domainVisionStatement = "Facilitar el descubrimiento, reclutamiento y matching entre marcas y socios del ecosistema."
+}
+
+BoundedContext ContextoComunicacionCRM implements CRM, Comunicaciones, Workflows {
+    type = APPLICATION
+    domainVisionStatement = "Gestionar todas las comunicaciones y relaciones con clientes del ecosistema."
+}
+
+/* ========== DOMINIOS Y SUBDOMINIOS ========== */
+
+/* DOMINIO PRINCIPAL: Gestión de Partnerships */
+Domain GestionPartnerships {
+    domainVisionStatement = "Transformar la forma en que las marcas crean, gestionan y escalan asociaciones estratégicas mediante una plataforma integral de gestión de partnerships que conecta marcas con afiliados, influencers, embajadores y socios B2B de manera automatizada y escalable."
+    
+    /* SUBDOMINIO NÚCLEO: Marketing de Afiliados */
+    Subdomain MarketingAfiliados {
+        type = CORE_DOMAIN
+        domainVisionStatement = "Automatizar la creación y gestión de programas de afiliación, permitiendo a las marcas reclutar afiliados, monitorear conversiones y optimizar el rendimiento con estructuras de comisiones flexibles y tracking avanzado."
+    }
+    
+    /* SUBDOMINIO NÚCLEO: Marketing de Influencers */
+    Subdomain MarketingInfluencers {
+        type = CORE_DOMAIN
+        domainVisionStatement = "Conectar marcas con influencers y creadores de contenido verificados, facilitando la gestión de campañas creativas, medición de impacto en tiempo real y automatización de contenido generado por usuarios."
+    }
+    
+    /* SUBDOMINIO NÚCLEO: Programas de Lealtad */
+    Subdomain ProgramasLealtad {
+        type = CORE_DOMAIN
+        domainVisionStatement = "Activar redes de empleados y clientes leales como embajadores de marca, automatizando la recopilación de testimonios, tracking de referidos y distribución de recompensas."
+    }
+    
+    /* SUBDOMINIO NÚCLEO: Plataforma de Partnerships */
+    Subdomain PlataformaPartnerships {
+        type = CORE_DOMAIN
+        domainVisionStatement = "Servir como columna vertebral del sistema gestionando el ciclo de vida completo de relaciones comerciales, automatización de contratos y análisis financiero del portafolio de socios."
+    }
+}
+
+/* DOMINIO: Gestión de Clientes */
+Domain GestionClientes {
+    domainVisionStatement = "Gestionar de manera integral las relaciones con todos los tipos de clientes del ecosistema Alpes Partners, incluyendo marcas anunciantes, socios publishers y agencias, proporcionando experiencias personalizadas y herramientas de autoservicio."
+    
+    /* SUBDOMINIO SOPORTE: Gestión de Marcas */
+    Subdomain GestionMarcas {
+        type = SUPPORTING_DOMAIN
+        domainVisionStatement = "Administrar el onboarding, configuración de campañas y gestión de relaciones con marcas anunciantes, incluyendo eCommerce, servicios financieros, SaaS, viajes y agencias de marcas."
+    }
+    
+    /* SUBDOMINIO SOPORTE: Gestión de Partners */
+    Subdomain GestionPartners {
+        type = SUPPORTING_DOMAIN
+        domainVisionStatement = "Gestionar el ecosistema de socios publishers incluyendo afiliados tradicionales, influencers, medios editoriales, embajadores y agencias de partners."
+    }
+    
+    /* SUBDOMINIO SOPORTE: Gestión de Agencias */
+    Subdomain GestionAgencias {
+        type = SUPPORTING_DOMAIN
+        domainVisionStatement = "Administrar tanto agencias que representan marcas como agencias que gestionan publishers, proporcionando herramientas especializadas para intermediarios del ecosistema."
+    }
+}
+
+/* DOMINIO: Gestión de Campañas */
+Domain GestionCampanas {
+    domainVisionStatement = "Orquestar el ciclo de vida completo de campañas de marketing de partnerships, desde la planificación y ejecución hasta la optimización y análisis de resultados, soportando múltiples tipos de campañas y objetivos de negocio."
+    
+    /* SUBDOMINIO NÚCLEO: Orquestación de Campañas */
+    Subdomain OrquestacionCampanas {
+        type = CORE_DOMAIN
+        domainVisionStatement = "Coordinar la creación, configuración y ejecución de campañas multi-canal, integrando workflows personalizados y automatizaciones basadas en reglas de negocio complejas."
+    }
+    
+    /* SUBDOMINIO SOPORTE: Gestión de Contenido */
+    Subdomain GestionContenido {
+        type = SUPPORTING_DOMAIN
+        domainVisionStatement = "Gestionar activos creativos, briefings, contenido generado por usuarios y materiales promocionales utilizados en campañas de partnerships."
+    }
+    
+    /* SUBDOMINIO SOPORTE: Gestión de Contratos */
+    Subdomain GestionContratos {
+        type = SUPPORTING_DOMAIN
+        domainVisionStatement = "Automatizar la generación, negociación y gestión de contratos digitales con términos CPA, CPL, CPC y estructuras de comisiones personalizadas."
+    }
+}
+
+/* DOMINIO: Analytics e Inteligencia */
+Domain AnalyticsInteligencia {
+    domainVisionStatement = "Proporcionar inteligencia de negocio avanzada y análisis predictivo para optimizar el rendimiento de partnerships, utilizando datos en tiempo real y machine learning para generar insights accionables."
+    
+    /* SUBDOMINIO NÚCLEO: Análisis de Rendimiento */
+    Subdomain AnalisisRendimiento {
+        type = CORE_DOMAIN
+        domainVisionStatement = "Analizar el rendimiento de campañas, socios y canales en tiempo real, proporcionando métricas de ROI, atribución precisa y recomendaciones de optimización."
+    }
+    
+    /* SUBDOMINIO SOPORTE: Reportes */
+    Subdomain Reportes {
+        type = SUPPORTING_DOMAIN
+        domainVisionStatement = "Generar reportes personalizados, dashboards interactivos y exportaciones de datos para diferentes stakeholders del ecosistema."
+    }
+    
+    /* SUBDOMINIO SOPORTE: Inteligencia de Negocio */
+    Subdomain InteligenciaNegocio {
+        type = SUPPORTING_DOMAIN
+        domainVisionStatement = "Aplicar técnicas de análisis avanzado, machine learning e inteligencia artificial para descubrir patrones, predecir tendencias y automatizar decisiones de negocio."
+    }
+}
+
+/* DOMINIO: Operaciones Financieras */
+Domain OperacionesFinancieras {
+    domainVisionStatement = "Gestionar todas las operaciones financieras del ecosistema de partnerships, incluyendo cálculo de comisiones, procesamiento de pagos globales, cumplimiento normativo y análisis financiero del portafolio."
+    
+    /* SUBDOMINIO NÚCLEO: Motor de Comisiones */
+    Subdomain MotorComisiones {
+        type = CORE_DOMAIN
+        domainVisionStatement = "Calcular comisiones complejas basadas en múltiples modelos de negocio (CPA, CPL, CPC, revenue share), manejar estructuras jerárquicas y procesar ajustes en tiempo real."
+    }
+    
+    /* SUBDOMINIO SOPORTE: Procesamiento de Pagos */
+    Subdomain ProcesamientoPagos {
+        type = SUPPORTING_DOMAIN
+        domainVisionStatement = "Procesar pagos automáticos globales en múltiples monedas y métodos, cumpliendo con SLA de 48 horas y regulaciones financieras internacionales."
+    }
+    
+    /* SUBDOMINIO SOPORTE: Cumplimiento Financiero */
+    Subdomain CumplimientoFinanciero {
+        type = SUPPORTING_DOMAIN
+        domainVisionStatement = "Asegurar cumplimiento normativo, auditoría antifraude, gestión de riesgos financieros y generación de reportes regulatorios."
+    }
+    
+    /* SUBDOMINIO GENÉRICO: Tesorería */
+    Subdomain Tesoreria {
+        type = GENERIC_SUBDOMAIN
+        domainVisionStatement = "Gestionar tesorería corporativa, flujos de caja, reconciliación bancaria y operaciones financieras administrativas generales."
+    }
+}
+
+/* DOMINIO: Infraestructura Tecnológica */
+Domain InfraestructuraTecnologica {
+    domainVisionStatement = "Proporcionar la infraestructura tecnológica robusta, escalable y segura necesaria para soportar 80,000+ transacciones por minuto y el crecimiento hacia el IPO, incluyendo tracking, eventos y APIs."
+    
+    /* SUBDOMINIO NÚCLEO: Procesamiento de Eventos */
+    Subdomain ProcesamientoEventos {
+        type = CORE_DOMAIN
+        domainVisionStatement = "Procesar eventos de negocio en tiempo real utilizando arquitectura reactiva para desacoplar sistemas y mejorar la escalabilidad del ecosistema."
+    }
+    
+    /* SUBDOMINIO NÚCLEO: Motor de Tracking */
+    Subdomain MotorTracking {
+        type = CORE_DOMAIN
+        domainVisionStatement = "Capturar y procesar eventos de tracking (clics, conversiones, ventas) mediante JavaScript tags, píxeles y APIs server-to-server con precisión y baja latencia."
+    }
+    
+    /* SUBDOMINIO SOPORTE: Pasarela de API */
+    Subdomain PasarelaAPI {
+        type = SUPPORTING_DOMAIN
+        domainVisionStatement = "Gestionar APIs públicas y privadas, autenticación, rate limiting y integración con partners B2B y sistemas externos."
+    }
+    
+    /* SUBDOMINIO GENÉRICO: Infraestructura */
+    Subdomain Infraestructura {
+        type = GENERIC_SUBDOMAIN
+        domainVisionStatement = "Proporcionar infraestructura de servidores, networking, storage, monitoring y DevOps para soportar las operaciones globales."
+    }
+    
+    /* SUBDOMINIO GENÉRICO: Seguridad */
+    Subdomain Seguridad {
+        type = GENERIC_SUBDOMAIN
+        domainVisionStatement = "Implementar seguridad de la información, protección de datos, gestión de identidades y cumplimiento de estándares de seguridad."
+    }
+}
+
+/* DOMINIO: Operaciones de Marketplace */
+Domain OperacionesMarketplace {
+    domainVisionStatement = "Facilitar el descubrimiento, reclutamiento y matching entre marcas y socios del ecosistema mediante algoritmos inteligentes y herramientas de marketplace automatizadas."
+    
+    /* SUBDOMINIO NÚCLEO: Descubrimiento de Partners */
+    Subdomain DescubrimientoPartners {
+        type = CORE_DOMAIN
+        domainVisionStatement = "Automatizar el descubrimiento y matching de socios óptimos utilizando algoritmos de machine learning basados en demografía, audiencia, rendimiento histórico y compatibilidad."
+    }
+    
+    /* SUBDOMINIO SOPORTE: Catálogo de Marketplace */
+    Subdomain CatalogoMarketplace {
+        type = SUPPORTING_DOMAIN
+        domainVisionStatement = "Gestionar catálogo de ofertas, productos, comisiones y oportunidades disponibles en el marketplace interno de partnerships."
+    }
+    
+    /* SUBDOMINIO SOPORTE: Onboarding */
+    Subdomain Onboarding {
+        type = SUPPORTING_DOMAIN
+        domainVisionStatement = "Automatizar procesos de onboarding para nuevos socios, verificación de identidad, configuración de cuentas y activación de programas."
+    }
+}
+
+/* DOMINIO: Comunicación y CRM */
+Domain ComunicacionCRM {
+    domainVisionStatement = "Gestionar todas las comunicaciones y relaciones con clientes del ecosistema mediante herramientas de CRM avanzadas, automatización de marketing y workflows de comunicación personalizados."
+    
+    /* SUBDOMINIO SOPORTE: CRM */
+    Subdomain CRM {
+        type = SUPPORTING_DOMAIN
+        domainVisionStatement = "Gestionar relaciones con clientes, historial de interacciones, segmentación de audiencias y gestión del ciclo de vida del cliente."
+    }
+    
+    /* SUBDOMINIO GENÉRICO: Comunicaciones */
+    Subdomain Comunicaciones {
+        type = GENERIC_SUBDOMAIN
+        domainVisionStatement = "Gestionar comunicaciones multi-canal incluyendo email, SMS, notificaciones push y mensajería in-app automatizada."
+    }
+    
+    /* SUBDOMINIO GENÉRICO: Workflows */
+    Subdomain Workflows {
+        type = GENERIC_SUBDOMAIN
+        domainVisionStatement = "Automatizar workflows de negocio, aprobaciones, escalamientos y procesos operativos mediante herramientas de BPM."
+    }
+}
+/* ========== FIN DEL ARCHIVO ========== */ 

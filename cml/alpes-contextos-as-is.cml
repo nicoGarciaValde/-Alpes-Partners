@@ -1,0 +1,42 @@
+/* Alpes Partners – AS-IS (Monolito) */
+
+ContextMap AlpesPartnersAsIs {
+  contains NucleoMonolitico
+  contains PasarelasPagoExternas
+  contains ServiciosTrackingExternos
+  contains ReportesLegacy
+  contains ProcesosManuales
+
+  NucleoMonolitico -> PasarelasPagoExternas
+  NucleoMonolitico -> ServiciosTrackingExternos
+  NucleoMonolitico -> ReportesLegacy
+  NucleoMonolitico -> ProcesosManuales
+}
+
+BoundedContext NucleoMonolitico {
+  Aggregate GestionPartnerships {
+    Entity EntidadPartnership
+    Entity EntidadAfiliado
+    Entity EntidadInfluencer
+    Entity EntidadMarca
+    Entity EntidadCampana
+    Entity EntidadComisionPrincipal
+    ValueObject TerminosPartnership
+  }
+
+  Aggregate ProcesamientoTransacciones {
+    Entity EntidadTransaccion
+    Entity EntidadConversion
+    Entity EntidadClick
+    Entity EntidadComisionTx
+    ValueObject DatosTracking
+  }
+}
+
+BoundedContext PasarelasPagoExternas {}
+
+BoundedContext ServiciosTrackingExternos {}
+
+BoundedContext ReportesLegacy {}
+
+BoundedContext ProcesosManuales {}
