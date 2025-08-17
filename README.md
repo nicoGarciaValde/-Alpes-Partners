@@ -19,7 +19,7 @@ Alpes Partners (AP) es una compañía colombiana líder en software de gestión 
 ## Documentación completa
 La documentación detallada del proyecto (event storming, bounded contexts, decisiones de diseño, etc.) se encuentra organizada en la **Wiki del repositorio**:
 
-[Ver la Wiki del proyecto](https://github.com/nicoGarciaValde/-Alpes-Partners/wiki)
+[Ver la Wiki del proyecto](https://github.com/nicoGarciaValde/-Alpes-Partners/wiki/Proyecto-Alpes-Partner)
 
 ---
 
