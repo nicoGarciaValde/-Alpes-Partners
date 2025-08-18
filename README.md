@@ -11,13 +11,15 @@ Alpes Partners (AP) es una compañía colombiana líder en software de gestión 
   - `dominios-subdominios.cml`
   - `contextmap-as-is.cml`
   - `contextmap-to-be.cml`
+  - Puede encontrar los diagramas en el link: [Diagramas CML](https://github.com/nicoGarciaValde/-Alpes-Partners/tree/main/cml/diagramas)
 - Diagramas Event Storming (AS-IS y TO-BE).
+  - Puede encontrar los diagramas en el link: [Diagramas Event Storming](https://github.com/nicoGarciaValde/-Alpes-Partners/tree/main/event-Storming)
 - Entregables de arquitectura de dominio.
 
 ---
 
 ## Documentación completa
-La documentación detallada del proyecto (event storming, bounded contexts, decisiones de diseño, etc.) se encuentra organizada en la **Wiki del repositorio**:
+La documentación detallada del proyecto se encuentra organizada en la **Wiki del repositorio**:
 
 [Ver la Wiki del proyecto](https://github.com/nicoGarciaValde/-Alpes-Partners/wiki/Proyecto-Alpes-Partner)
 
